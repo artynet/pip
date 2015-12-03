@@ -14,13 +14,13 @@ import sys
 # Downstream redistributors which have debundled our dependencies should also
 # patch this value to be true. This will trigger the additional patching
 # to cause things like "six" to be available as pip.
-DEBUNDLED = False
+DEBUNDLED = True
 
 # By default, look in this directory for a bunch of .whl files which we will
 # add to the beginning of sys.path before attempting to import anything. This
 # is done to support downstream re-distributors like Debian and Fedora who
 # wish to create their own Wheels for our dependencies to aid in debundling.
-WHEEL_DIR = os.path.abspath(os.path.dirname(__file__))
+WHEEL_DIR = os.path.abspath(os.path.join(sys.prefix, 'share', 'python-wheels'))
 
 
 # Define a small helper function to alias our vendored modules to the real ones
