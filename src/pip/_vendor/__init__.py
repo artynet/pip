@@ -90,8 +90,12 @@ if DEBUNDLED:
     vendored("requests.packages.urllib3.fields")
     vendored("requests.packages.urllib3.filepost")
     vendored("requests.packages.urllib3.packages")
-    vendored("requests.packages.urllib3.packages.ordered_dict")
-    vendored("requests.packages.urllib3.packages.six")
+    try:
+        vendored("requests.packages.urllib3.packages.ordered_dict")
+        vendored("requests.packages.urllib3.packages.six")
+    except ImportError:
+        # Debian already unbundles these from requests.
+        pass
     vendored("requests.packages.urllib3.packages.ssl_match_hostname")
     vendored("requests.packages.urllib3.packages.ssl_match_hostname."
              "_implementation")
