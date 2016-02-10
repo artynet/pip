@@ -552,8 +552,10 @@ which means that all Python distributions support an alternative install
 location that is specific to a user.  The default location for each OS is
 explained in the python documentation for the `site.USER_BASE
 <https://docs.python.org/3/library/site.html#site.USER_BASE>`_ variable.  This mode
-of installation can be turned on by specifying the :ref:`--user
-<install_--user>` option to ``pip install``.
+of installation is the default on Debian and derivative systems (--user has no
+effect) when inside non-virtual environments, and when the script is run as
+non-root. This behavior can be turned off by specifying the
+:ref:`--system <install_--system>` option to ``pip install``.
 
 Moreover, the "user scheme" can be customized by setting the
 ``PYTHONUSERBASE`` environment variable, which updates the value of ``site.USER_BASE``.
