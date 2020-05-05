@@ -1,0 +1,7 @@
+hands-off-system-packages.patch
+debundle.patch
+handle-unbundled-requests.patch
+set_user_default.patch
+disable-pip-version-check.patch
+commands_list_version_workaround.patch
+add_pkg-resources_to_freeze.patch
