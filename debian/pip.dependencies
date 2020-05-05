@@ -1,0 +1,10 @@
+certifi
+chardet
+colorama
+distlib
+idna
+html5lib
+requests
+setuptools
+six
+urllib3
