@@ -1,0 +1,28 @@
+From: Scott Kitterman <scott@kitterman.com>
+Date: Mon, 20 Apr 2020 10:59:54 -0700
+Subject: Include pkg-resources in freeze system wheels
+
+Bug-Debian: https://bugs.debian.org/871790
+Origin: vendor
+Forwarded: not-needed
+Last-Update: 2020-04-04
+
+  * Add pkg-resources to pip freeze 'DEV_PKGS' so this Debian unique system
+    wheel does not show up when pip freeze is run (Closes: #871790)
+---
+ src/pip/_internal/commands/freeze.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/pip/_internal/commands/freeze.py b/src/pip/_internal/commands/freeze.py
+index c59eb39..e96c083 100644
+--- a/src/pip/_internal/commands/freeze.py
++++ b/src/pip/_internal/commands/freeze.py
+@@ -12,7 +12,7 @@ from pip._internal.models.format_control import FormatControl
+ from pip._internal.operations.freeze import freeze
+ from pip._internal.utils.compat import stdlib_pkgs
+ 
+-DEV_PKGS = {'pip', 'setuptools', 'distribute', 'wheel'}
++DEV_PKGS = {'pip', 'setuptools', 'distribute', 'wheel', 'pkg-resources'}
+ 
+ 
+ class FreezeCommand(Command):
