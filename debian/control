@@ -13,6 +13,8 @@ Build-Depends: debhelper (>= 11),
                python-ipaddress,
                python-setuptools,
                python-webencodings,
+               python-ipaddr,
+               python-contextlib2,
                python3-all,
                python3-appdirs,
                python3-cachecontrol,
@@ -40,6 +42,7 @@ Build-Depends: debhelper (>= 11),
                python3-urllib3,
                python3-webencodings,
                python3-wheel,
+               python3-pep517
 Standards-Version: 4.2.1
 Vcs-Git: https://salsa.debian.org/python-team/modules/python-pip.git
 Vcs-Browser: https://salsa.debian.org/python-team/modules/python-pip
