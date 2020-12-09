@@ -1,0 +1,28 @@
+From: Barry Warsaw <barry@python.org>
+Date: Fri, 29 Jan 2016 16:56:43 -0500
+Subject: Debian already unbundles things from requests.
+
+Patch-Name: handle-unbundled-requests.patch
+---
+ src/pip/_vendor/__init__.py | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/src/pip/_vendor/__init__.py b/src/pip/_vendor/__init__.py
+index b4b0fa4..6a94684 100644
+--- a/src/pip/_vendor/__init__.py
++++ b/src/pip/_vendor/__init__.py
+@@ -94,8 +94,12 @@ if DEBUNDLED:
+     vendored("requests.packages.urllib3.fields")
+     vendored("requests.packages.urllib3.filepost")
+     vendored("requests.packages.urllib3.packages")
+-    vendored("requests.packages.urllib3.packages.ordered_dict")
+-    vendored("requests.packages.urllib3.packages.six")
++    try:
++        vendored("requests.packages.urllib3.packages.ordered_dict")
++        vendored("requests.packages.urllib3.packages.six")
++    except ImportError:
++        # Debian already unbundles these from requests.
++        pass
+     vendored("requests.packages.urllib3.packages.ssl_match_hostname")
+     vendored("requests.packages.urllib3.packages.ssl_match_hostname."
+              "_implementation")

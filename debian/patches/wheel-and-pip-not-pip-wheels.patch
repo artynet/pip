@@ -1,0 +1,23 @@
+From: Scott Kitterman <scott@kitterman.com>
+Date: Fri, 8 May 2020 21:53:12 -0400
+Subject: wheel and pip not pip wheels
+
+---
+ src/pip/_vendor/__init__.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/pip/_vendor/__init__.py b/src/pip/_vendor/__init__.py
+index 51b1b56..d4e20fe 100644
+--- a/src/pip/_vendor/__init__.py
++++ b/src/pip/_vendor/__init__.py
+@@ -58,7 +58,9 @@ def vendored(modulename):
+ if DEBUNDLED:
+     # Actually look inside of WHEEL_DIR to find .whl files and add them to the
+     # front of our sys.path.
+-    sys.path[:] = glob.glob(os.path.join(WHEEL_DIR, "*.whl")) + sys.path
++    sys.path[:] = [fn for fn in glob.iglob(os.path.join(WHEEL_DIR, '*.whl'))
++         if not (os.path.basename(fn).startswith('wheel') or
++             os.path.basename(fn).startswith('pip'))] + sys.path
+ 
+     # Actually alias all of our vendored dependencies.
+     vendored("appdirs")

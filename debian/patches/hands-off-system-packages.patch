@@ -1,0 +1,77 @@
+From: Geoffrey Thomas <geofft@ldpreload.com>
+Date: Wed, 3 Dec 2014 11:18:11 -0600
+Subject: Prevent pip from removing system packages.
+
+Adjust is_local() to consider OS-owned paths non-local.  Fix the error
+message for is_local() in the non-virtualenv case.
+
+Author: Geoffrey Thomas <geofft@ldpreload.com>
+Bug-Debian: http://bugs.debian.org/771794
+Origin: https://github.com/geofft/pip.git
+Forwarded: not-needed
+Reviewed-By: Donald Stufft <donald@stufft.io>
+Reviewed-By: Scott Kitterman <scott@kitterman.com>
+Last-Update: 2014-12-04
+
+Patch-Name: hands-off-system-packages.patch
+---
+ src/pip/_internal/utils/misc.py | 36 +++++++++++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 9 deletions(-)
+
+diff --git a/src/pip/_internal/utils/misc.py b/src/pip/_internal/utils/misc.py
+index 0903182..c8eb6ad 100644
+--- a/src/pip/_internal/utils/misc.py
++++ b/src/pip/_internal/utils/misc.py
+@@ -359,25 +359,43 @@ def renames(old, new):
+ def is_local(path):
+     # type: (str) -> bool
+     """
+-    Return True if path is within sys.prefix, if we're running in a virtualenv.
++    Return True if this is a path pip is allowed to modify.
+ 
+-    If we're not in a virtualenv, all paths are considered "local."
++    If we're in a virtualenv, sys.prefix points to the virtualenv's
++    prefix; only sys.prefix is considered local.
++
++    If we're not in a virtualenv, in general we can modify anything.
++    However, if the OS vendor has configured distutils to install
++    somewhere other than sys.prefix (which could be a subdirectory of
++    sys.prefix, e.g. /usr/local), we consider sys.prefix itself nonlocal
++    and the domain of the OS vendor. (In other words, everything _other
++    than_ sys.prefix is considered local.)
+ 
+     Caution: this function assumes the head of path has been normalized
+     with normalize_path.
+     """
+-    if not running_under_virtualenv():
+-        return True
+-    return path.startswith(normalize_path(sys.prefix))
++
++    path = normalize_path(path)
++    prefix = normalize_path(sys.prefix)
++
++    if running_under_virtualenv():
++        return path.startswith(normalize_path(sys.prefix))
++    else:
++        from pip._internal.locations import distutils_scheme
++        if path.startswith(prefix):
++            for local_path in distutils_scheme("").values():
++                if path.startswith(normalize_path(local_path)):
++                    return True
++            return False
++        else:
++            return True
+ 
+ 
+ def dist_is_local(dist):
+     # type: (Distribution) -> bool
+     """
+-    Return True if given Distribution object is installed locally
+-    (i.e. within current virtualenv).
+-
+-    Always True if we're not in a virtualenv.
++    Return True if given Distribution object is installed somewhere pip
++    is allowed to modify.
+ 
+     """
+     return is_local(dist_location(dist))

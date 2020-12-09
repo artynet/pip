@@ -1,0 +1,45 @@
+From: Scott Kitterman <scott@kitterman.com>
+Date: Mon, 20 Apr 2020 10:59:54 -0700
+Subject: Make sure pip's version parsing is always used
+
+Bug-Debian: https://bugs.debian.org/912379
+Origin: vendor
+Bug: https://github.com/pypa/setuptools/issues/2052
+Forwarded: https://github.com/pypa/setuptools/issues/2052
+Last-Update: 2020-04-01
+
+  * Patch command/list.py to round trip versions through string and back to
+    versions to work around pip/setuptools incompatibility (Closes: #912379)
+---
+ src/pip/_internal/commands/list.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/pip/_internal/commands/list.py b/src/pip/_internal/commands/list.py
+index cf3be7e..acdcc6f 100644
+--- a/src/pip/_internal/commands/list.py
++++ b/src/pip/_internal/commands/list.py
+@@ -22,6 +22,8 @@ from pip._internal.utils.misc import (
+ )
+ from pip._internal.utils.packaging import get_installer
+ 
++from pip._vendor.packaging.version import parse
++
+ logger = logging.getLogger(__name__)
+ 
+ 
+@@ -164,13 +166,13 @@ class ListCommand(IndexGroupCommand):
+     def get_outdated(self, packages, options):
+         return [
+             dist for dist in self.iter_packages_latest_infos(packages, options)
+-            if dist.latest_version > dist.parsed_version
++            if parse(str(dist.latest_version)) > parse(str(dist.parsed_version))
+         ]
+ 
+     def get_uptodate(self, packages, options):
+         return [
+             dist for dist in self.iter_packages_latest_infos(packages, options)
+-            if dist.latest_version == dist.parsed_version
++            if parse(str(dist.latest_version)) == parse(str(dist.parsed_version))
+         ]
+ 
+     def get_not_required(self, packages, options):

@@ -1,0 +1,809 @@
+python-pip (20.3.1-1) unstable; urgency=medium
+
+  * New upstream version.
+
+ -- Scott Kitterman <scott@kitterman.com>  Tue, 08 Dec 2020 23:44:10 +0000
+
+python-pip (20.1.1-2) unstable; urgency=medium
+
+  * Delete long unused debian/pip.dependencies file
+  * Add debian/patches/debian-python2.7-sysconfig-workaround.patch so that
+    editable installs work with python2.7 (pypa/pip/issues/5193)
+    - Thanks to Stéphane Bidoul for the patch
+  * Add debian/patches/debug-command-for-unbundled.patch so that pip debug
+    not only doesn't fail due to unbundling, it provides useful information
+    (Closes: #961540)
+
+ -- Scott Kitterman <scott@kitterman.com>  Tue, 26 May 2020 20:44:50 -0400
+
+python-pip (20.1.1-1) unstable; urgency=medium
+
+  * Ship /usr/bin/pip in python3-pip since it is no longer provided elsewhere
+  * Add lintian override for python3-pip depending on python-pip-whl
+  * Update python-pip-whl short description to be different than python3-pip
+  * Update debian/copyright
+  * New upstream release
+    - Refresh patches
+
+ -- Scott Kitterman <scott@kitterman.com>  Thu, 21 May 2020 01:31:23 -0400
+
+python-pip (20.1-2) unstable; urgency=medium
+
+  [ Stefano Rivera ]
+  * Team Upload.
+
+  [ Scott Kitterman ]
+  * Update debundle.patch so pypy uses base_prefix as well
+  * Update README.debian so it is no longer three releases out of date
+  * Add debian/patches/wheel-and-pip-not-pip-wheels.patch to keep the wheel
+    and pip wheels we install in /usr/share/python-wheels from fooling pip
+    into thinking things are available that are not (Closes: #959997)
+
+ -- Stefano Rivera <stefanor@debian.org>  Fri, 08 May 2020 23:16:13 -0700
+
+python-pip (20.1-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #958396)
+    - Delete debian/patches/add_appdirs_to_vendored.patch and
+      debian/patches/add_certifi_to_vendored.patch, incorporated upstream
+    - Update debian/control and debian/rules to use python3-toml vice
+      python3-pytoml
+    - Update debian/control and debian/rules to add python3-resolvelib to
+      packages that are wheeled (new upstream dependency/vendored module)
+    - Update version requirements for python3-certifi. python3-distro,
+      python3-packaging, python3-pyparsing, python3-requests, python3-idna,
+      and python3-urllib3 to match versions shipped with pip
+  * Build pip wheels for setuptools and pkg_resources from python2 because the
+    current python3 versions no longer support python2 and pip does
+    - Set minimum dirtbike version to 0.3-7~ since that is the first version
+      that supports the --py2 flag and building versioned wheels from python2
+    - Add python-setuptools and python-pkg-resources back to build-depends
+    - Use dirtbike --py2 flag for setuptools and pkg_resources
+    - Update debian/genbuildusing.sh to also pick up Built-Using from python2
+      sources
+  * Use sys.base_prefix instead of sys.prefix in debundle.patch, thanks to
+    dstufft for the suggestion
+
+ -- Scott Kitterman <scott@kitterman.com>  Sun, 03 May 2020 12:04:58 -0400
+
+python-pip (20.0.2-5) unstable; urgency=medium
+
+  [ Stefano Rivera ]
+  * Team Upload.
+
+  [ Scott Kitterman ]
+  * Add pkg-resources to pip freeze 'DEV_PKGS' so this Debian unique system
+    wheel does not show up when pip freeze is run (Closes: #871790)
+  * Add lintian overrides for source-contains-prebuilt-windows-binary to
+    document why these are acceptable for Debian
+
+  [ Stefano Rivera ]
+  * Include python3-ipaddr in the wheel bundle for Python 2.7 virtualenvs.
+  * Declare Rules-Requires-Root: no
+  * Correctly determine the location of the wheels under PyPy.
+    (Closes: #945187)
+
+ -- Stefano Rivera <stefanor@debian.org>  Mon, 20 Apr 2020 12:59:57 -0700
+
+python-pip (20.0.2-4) unstable; urgency=medium
+
+  * Patch command/list.py to round trip versions through string and back to
+    versions to work around pip/setuptools incompatibility (Closes: #912379)
+    - Add debian/patches/commands_list_version_workaround.patch
+  * Switch python3-all build-depend to python3 to work around #955632 (Closes:
+    #955624)
+  * Set python-pip-whl to be Multi-Arch: foreign as suggested by the
+    Multi-Arch hinter
+  * Drop ancient python-pip-whl Breaks/Replaces
+    - No longer needed since replaced packages were last in oldoldstable
+  * Switch back to using system pep517 to create a wheel for pip now that
+    pep517 is zip safe
+  * Make dh_python3 call verbose so we see more in the build logs
+  * Clean up redundant Recommends for python3-pip
+  * Remove obsolete needs-recommends restriction from d/tests/control
+
+ -- Scott Kitterman <scott@kitterman.com>  Fri, 03 Apr 2020 14:51:05 -0400
+
+python-pip (20.0.2-3) unstable; urgency=medium
+
+  * Add myself to uploaders
+  * Bump standards-version to 4.5.0 without further change
+  * Revert to using vendored pep517 because of path errors when unbundled
+    (Closes: #955414)
+  * Add missing python3-pip depends on python3-setuptools and python3-wheel
+  * Switch to using upstream provided entrypoint for pip3 (Closes: #954944)
+  * Document using --find-links to install python-pip-whl wheels in pip3 (1)
+
+ -- Scott Kitterman <scott@kitterman.com>  Tue, 31 Mar 2020 10:30:02 -0400
+
+python-pip (20.0.2-2) unstable; urgency=medium
+
+  * Team upload
+  * Update autopkgtests
+    - Drop python2 tests
+    - Use python3 -m pip vice pip3 (it's the future)
+
+ -- Scott Kitterman <scott@kitterman.com>  Tue, 17 Mar 2020 17:35:18 -0400
+
+python-pip (20.0.2-1) unstable; urgency=medium
+
+  * Team upload
+
+  [ Emmanuel Arias ]
+  * Add patch: fix Type error on list outdated comand (Closes: #878082)
+    - Add 0007-Fix-Type-Error-on-lis-outdated-command.patch
+    - Add test on d/tests/pip3-user.sh
+  * Bump Standard-Version to 4.4.1 (from 4.2.1)
+
+  [ Ondřej Nový ]
+  * Use debhelper-compat instead of debian/compat.
+
+  [ Scott Kitterman ]
+  * New upstream release (Closes: #949128)
+    - Delete d/p/Properly_catch_requests_HTTPError_in_index.py.patch,
+      incorporated upstream
+    - Delete d/p/0007-Fix-Type-Error-on-lis-outdated-command.patch,
+      incorporated upstream
+    - Refresh patches
+  * Set minimum version requirements in build-depends for unvendored packages
+    based on version vendored by upstream
+  * Add python3-contextlib2, python3-msgpack. and python3-pep517 to
+    build-depends because they are vendored by upstream and run dirtbike in
+    d/rules to produce the required wheels
+  * Drop python2 support (Closes: #938027)
+  * Add appdirs to unbundled lib list in src/pip/_vendor/__init__.py so
+    Debian's unbundled approach works (already fixed upstream for 20.0.3)
+
+ -- Scott Kitterman <scott@kitterman.com>  Sun, 15 Mar 2020 19:35:26 -0400
+
+python-pip (18.1-5) unstable; urgency=medium
+
+  * Team upload.
+  * Refresh hands-off-system-packages.patch.
+  * Add Properly_catch_requests_HTTPError_in_index.py.patch: this fixes 404
+    when using --extra-index-url due to the way we de-bundle python-requests
+    from pip. Thanks to Fabio Natali <me@fabionatali.com> for the bug report,
+    Clark Boylan for the patch, and all of the OpenStack infra team for their
+    help and involving me for this fix (Closes: #837764).
+
+ -- Thomas Goirand <zigo@debian.org>  Sat, 30 Mar 2019 21:10:13 +0100
+
+python-pip (18.1-4) unstable; urgency=medium
+
+  * Generate Built-Using at the build time (Closes: #831271).
+
+ -- Andrej Shadura <andrewsh@debian.org>  Thu, 03 Jan 2019 17:38:22 +0100
+
+python-pip (18.1-3) unstable; urgency=medium
+
+  * Add gitlab-ci.yml.
+  * Fix autopkgtests (Closes: #916666):
+    - Add $HOME/.local/bin to PATH to prevent pip’s warnings.
+    - Make sure user tests always run as non-root to test that pip
+      automatically enables --user.
+
+ -- Andrej Shadura <andrewsh@debian.org>  Wed, 19 Dec 2018 16:49:19 +0100
+
+python-pip (18.1-2) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+
+ -- Andrej Shadura <andrewsh@debian.org>  Mon, 03 Dec 2018 21:38:53 +0100
+
+python-pip (18.1-1) experimental; urgency=medium
+
+  [ Barry Warsaw ]
+  * d/control: Remove MIA Jeff Licquia from Uploaders.  (Closes: #854225)
+
+  [ Ondřej Nový ]
+  * d/control: Set Vcs-* to salsa.debian.org.
+  * d/copyright: Use https protocol in Format field.
+  * d/watch: Use https protocol.
+  * d/tests: Use AUTOPKGTEST_TMP instead of ADTTMP.
+  * d/control: Remove ancient X-Python-Version field.
+  * d/control: Remove ancient X-Python3-Version field.
+  * Convert git repository from git-dpm to gbp layout.
+
+  [ Andrius Merkys ]
+  * New upstream version 18.0.  (Closes: #901393)
+  * Remove patch html5lib-alternative-beta-name.patch which is no longer
+    required as versions of html5lib match.
+  * Update patches.
+  * debian/rules: adjust paths.
+  * debian/rules: changelog is stored in NEWS.rst now.
+
+  [ Manas Kashyap ]
+  * New upstream release 18.1
+  * Update Standards-Version to 4.2.1, no changes.
+  * Use debhelper 11.
+
+  [ Andrej Shadura ]
+  * Refresh set_user_default.patch.
+  * Refresh disable-pip-version-check.patch.
+  * Drop use-unvendored-urllib3.diff.
+  * Don’t remove vendored PEP517 code.
+  * Only default to --user when --target/--prefix not set
+    (Closes: #830892, #895232, #876145)
+
+ -- Andrej Shadura <andrewsh@debian.org>  Tue, 27 Nov 2018 12:57:21 +0100
+
+python-pip (9.0.1-2.3) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Build-depend on python3-idna. Closes: #897121, #896998.
+  * debian/pip.dependencies: Add idna.
+  * debian/rules: run dirtbike for idna.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 02 May 2018 12:35:24 +0200
+
+python-pip (9.0.1-2.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * debian/pip.dependencies: Add certifi.
+  * debian/rules: run dirtbike for certifi.
+  * pip/_vendor/__init__.py: Use the unvendored urllib3. Closes: #896998.
+
+ -- Matthias Klose <doko@debian.org>  Sat, 28 Apr 2018 15:31:03 +0200
+
+python-pip (9.0.1-2.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * python3-pip: Depend on python3-distutils. Closes: #896390.
+
+ -- Matthias Klose <doko@debian.org>  Thu, 26 Apr 2018 08:19:13 +0200
+
+python-pip (9.0.1-2) unstable; urgency=medium
+
+  * d/control: Update python-setuptools Built-Using version.
+
+ -- Barry Warsaw <barry@debian.org>  Wed, 11 Jan 2017 15:48:53 -0500
+
+python-pip (9.0.1-1) unstable; urgency=medium
+
+  * New upstream release.
+  * d/control: Add new dependencies python3-appdirs and python3-distro to
+    Build-Depends and Built-Using.
+  * d/rules: Build appdirs and distro wheels with dirtbike.
+  * d/tests/pip{2,3}-{root,user}.sh: Update the `pip list` command to
+    explicitly name --format=columns.  This avoids a test breaking
+    deprecation warning.
+
+ -- Barry Warsaw <barry@debian.org>  Tue, 29 Nov 2016 13:58:24 -0500
+
+python-pip (8.1.2-4) unstable; urgency=medium
+
+  * d/patches/disable-pip-version-check.patch: Added.  (Closes: #844679)
+  * d/control:
+    - Bump html5lib Built-Using version number.
+    - Add Built-Using for python-webencodings (a new html5lib dependency).
+    - Add Build-Depends on python{,3}-webencodings.
+  * d/rules: Build webencodings wheel with dirtbike.
+
+ -- Barry Warsaw <barry@debian.org>  Mon, 21 Nov 2016 18:16:52 -0500
+
+python-pip (8.1.2-3) unstable; urgency=medium
+
+  [ Felipe Reyes ]
+  * d/tests: control: Add needs-recommends restriction. (Closes: #842732)
+
+  [ Barry Warsaw ]
+  * d/control: Update Built-Using.
+  * d/rules: Also generate /usr/bin/pip2.  (Closes: #834193)
+  * d/tests/pip2-*.sh:
+    - Install world<4 since v4 is not Python 2 compatible.  (Modified
+      from Felipe's original patch.)
+    - Add tests which invoke pip2.
+
+ -- Barry Warsaw <barry@debian.org>  Tue, 01 Nov 2016 12:24:39 -0400
+
+python-pip (8.1.2-2) unstable; urgency=medium
+
+  * d/control:
+    - Update descriptions since pip really isn't the "alternative" any more
+      and nobody still uses easy_install.
+    - Update Built-Using packages and versions.
+  * d/tests/*.sh: export PIP_DISABLE_PIP_VERSION_CHECK=1 to prevent
+    stderr warnings (and thus test failures) for when we get behind
+    new upstream releases.
+  * d/patches:
+    - skip-bad-requirements.patch: Added to work around crashes
+      on bogus requirements (e.g. -lxd).
+    - ignore-socks-warnings.patch: Added to silence DependencyWarnings.
+
+ -- Barry Warsaw <barry@debian.org>  Fri, 17 Jun 2016 04:21:45 -0400
+
+python-pip (8.1.2-1) unstable; urgency=medium
+
+  * New upstream release.
+  * d/control:
+    - Add python3-pyparsing as new Build-Depends.
+    - Update python-colorama and python-setuptools Built-Using versions.
+    - Add pyparsing to Built-Using.
+    - Bump Standards-Version to 3.9.8 with no other changes needed.
+  * d/rules: dirtbike up pyparsing.
+  * d/tests/control: Add new DEP-8 test.
+  * d/tests/pip3-editable.sh: Test to prove that the editable mode extras
+    bug is fixed.  (Closes: #823358)
+
+ -- Barry Warsaw <barry@debian.org>  Wed, 11 May 2016 09:58:14 -0400
+
+python-pip (8.1.1-2) unstable; urgency=medium
+
+  * d/control: Add python{,3}-setuptools to Recommends.  (Closes: #814292)
+  * d/rules: We no longer need to dirtbike _markerlib.  (Closes: #821014)
+
+ -- Barry Warsaw <barry@debian.org>  Thu, 14 Apr 2016 14:57:49 -0400
+
+python-pip (8.1.1-1) unstable; urgency=medium
+
+  * New upstream release.
+  * d/makepip.py: Remove the date tag to support reproducible builds.
+    (Closes: #816214)
+
+ -- Barry Warsaw <barry@debian.org>  Thu, 17 Mar 2016 10:31:21 -0400
+
+python-pip (8.1.0-2) unstable; urgency=medium
+
+  * d/control:
+    - Add ca-certificates to python-pip-whl Depends.
+    - wrap-and-sort -at
+
+ -- Barry Warsaw <barry@debian.org>  Wed, 09 Mar 2016 17:02:55 -0500
+
+python-pip (8.1.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Barry Warsaw <barry@debian.org>  Mon, 07 Mar 2016 16:12:52 -0500
+
+python-pip (8.0.3-3) unstable; urgency=medium
+
+  * d/control: Breaks/Replaces virtualenv << 14.0.5+ds-5 since the pip and
+    wheel .whl files now move to python-pip-whl.
+  * d/rules:
+    - dirtbike up the wheel .whl and build the pip .whl using
+      setup.py bdist_wheel.
+    - Reduce build verbosity.
+
+ -- Barry Warsaw <barry@debian.org>  Thu, 03 Mar 2016 16:20:04 -0500
+
+python-pip (8.0.3-2) unstable; urgency=medium
+
+  * d/rules: Rewheel _markerlib too.
+
+ -- Barry Warsaw <barry@debian.org>  Sat, 27 Feb 2016 13:36:46 -0500
+
+python-pip (8.0.3-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Barry Warsaw <barry@debian.org>  Thu, 25 Feb 2016 17:15:32 -0500
+
+python-pip (8.0.2-8) unstable; urgency=medium
+
+  * d/control:
+    - Use https: URL in Vcs-Git field.
+    - Bump Standards-Version to 3.9.7 with no other changes necessary.
+    - Update Breaks/Replaces and Built-Using versions... again! (LP: #1546447)
+
+ -- Barry Warsaw <barry@debian.org>  Wed, 24 Feb 2016 17:24:28 -0500
+
+python-pip (8.0.2-7) unstable; urgency=medium
+
+  * d/control: Update the python-setuptools-whl Breaks/Replaces versions.
+    (Closes: #814571)
+
+ -- Barry Warsaw <barry@debian.org>  Mon, 15 Feb 2016 13:17:16 -0500
+
+python-pip (8.0.2-6) unstable; urgency=medium
+
+  * d/control: Fix Breaks/Replaces version on python-six-whl.
+    (Closes: #813399)
+
+ -- Barry Warsaw <barry@debian.org>  Fri, 12 Feb 2016 14:23:58 -0500
+
+python-pip (8.0.2-5) unstable; urgency=medium
+
+  * d/control: Fix Built-Using package names.
+
+ -- Barry Warsaw <barry@debian.org>  Wed, 10 Feb 2016 18:01:20 -0500
+
+python-pip (8.0.2-4) unstable; urgency=medium
+
+  * d/control: Restore Built-Using header to python-pip-whl.
+  * d/patches/set_user_default.patch: Port from Ubuntu.  When run as a
+    non-root user outside of a virtual environment --user is the default,
+    and --ignore-installed is implied.  (Closes: #725848)
+  * d/tests:
+    - Rename pip2.sh -> pip2-root.sh
+    - Rename pip3.sh -> pip3-root.sh
+    - Add pip2-user.sh to test default non-root --user behavior for Python 2.
+    - Add pip3-user.sh to test default non-root --user behavior for Python 3.
+
+ -- Barry Warsaw <barry@debian.org>  Wed, 10 Feb 2016 16:38:44 -0500
+
+python-pip (8.0.2-3) unstable; urgency=medium
+
+  * Fix python-pip Recommends of python-all-dev.  (Closes: #799559)
+  * d/control: Fix Breaks/Depends for python-pip-whl.  (Closes: #813399)
+
+ -- Barry Warsaw <barry@debian.org>  Sun, 07 Feb 2016 11:51:58 -0500
+
+python-pip (8.0.2-2) unstable; urgency=medium
+
+  * d/control: Add binary version dependencies. (Closes: #813162)
+
+ -- Barry Warsaw <barry@debian.org>  Fri, 29 Jan 2016 21:44:52 -0500
+
+python-pip (8.0.2-1) unstable; urgency=medium
+
+  * New upstream release.
+  * d/control:
+    - Update Build-Depends by removing packages only needed for the test
+      suite (which can't be run with upstream tarball), and adding all the
+      dependent packages which need rewheeling via dirtbike.
+    - Update Homepage.
+    - Bump minimum Python requirements to 2.7 and 3.4.
+    - Bump debhelper dependency to version 9.
+    - Add Built-Using to python-pip-whl
+    - Add appropriate Breaks/Replaces to python-pip-whl
+    - Remove old Depends from python-pip-whl
+    - Update Descriptions.
+    - wrap-and-sort -at
+  * d/makepip.py: A script containing the custom template for generating
+    the /usr/bin/pip* files.  This avoids calling pkg_resources before the
+    wheels are installed on sys.path.
+  * d/patches:
+    - debundle.patch: Renamed/combined, and also set the WHEEL_DIR.
+    - hands-off-system-packages.patch: Renamed and updated.
+  * d/python-pip-whl.install: Removed.
+  * d/rules:
+    - Use the upstream recommended way to devendorize.
+    - Invoke dirtbike where needed to rewheel installed packages.
+    - Disable build-time unittests since upstream tarball does not contain
+      the necessary files.
+    - Use our own /usr/bin template to generate pip and pip3.  The
+      standard easy_install based console_scripts template calls
+      pkg_resources before the wheels are installed on sys.path.
+    - Update a few other overrides.
+  * d/tests:
+    - Add some DEP-8 smoketests.
+  * d/watch: Use pypi.debian.net mirror.
+
+ -- Barry Warsaw <barry@debian.org>  Fri, 29 Jan 2016 17:53:39 -0500
+
+python-pip (1.5.6-6) unstable; urgency=medium
+
+  [ Felix C. Stegerman ]
+  * d/patches/0006-bug-785787.patch: Allow pip 1.5.6 to handle the PEP 440
+    "epoch" field.  (Closes: #785787)
+
+  [ Barry Warsaw ]
+  * d/control:
+    - Update Vcs-* header for conversion to git-dpm.
+    - Add myself to Uploaders.
+  * d/watch: Update to pypi.debian.net redirector.
+  * wrap-and-sort
+
+ -- Barry Warsaw <barry@debian.org>  Wed, 27 May 2015 10:11:32 -0400
+
+python-pip (1.5.6-5) unstable; urgency=medium
+
+  * Team upload.
+  * Use the .whl files for de-vendorized dependencies both inside and
+    outside the virtual environments.  (Closes: #744145)
+  * d/control: Bump Standards-Version with no other changes necessary.
+  * d/patches/use-venv-wheels.patch: Renamed to use-wheels.patch
+
+ -- Barry Warsaw <barry@debian.org>  Fri, 27 Feb 2015 17:02:54 -0500
+
+python-pip (1.5.6-4) unstable; urgency=medium
+
+  * Team upload.
+  * Backport upstream fix to use non-predictable download directories
+    - Fixes denial of service vector (CVE-2014-8991) (Closes: #725847)
+    - Fixes retry failures (Closes: #769930)
+  * Add patch (reviewed by upstream, but not commited there yet) to prevent
+    pip from removing system python packages (Closes: #771794)
+
+ -- Scott Kitterman <scott@kitterman.com>  Wed, 03 Dec 2014 13:46:31 -0500
+
+python-pip (1.5.6-3) unstable; urgency=medium
+
+  * Team upload.
+  * Remove d/patches/format_egg_string.patch. This was worked around,
+    upstream, in 1.0. And this patch now breaks pip uninstall in virtualenvs.
+    (Closes: #751827)
+
+ -- Stefano Rivera <stefanor@debian.org>  Mon, 17 Nov 2014 11:18:13 -0800
+
+python-pip (1.5.6-2) unstable; urgency=medium
+
+  * Team upload.
+  * d/patches/use-venv-wheels.patch: Use OSError and check errno
+    instead of using FileNotFoundError, since the latter doesn't
+    exist in Python 2.
+
+ -- Barry Warsaw <barry@debian.org>  Fri, 06 Jun 2014 12:26:53 -0400
+
+python-pip (1.5.6-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * d/control:
+    - Update python-pip-whl dependencies.
+    - Add python-docutils to Build-Depends.
+    - Add python{,3}-wheel to Recommends in order to enable the `pip
+      wheel` command.  (Closes: #733286)
+  * d/patches
+    - de-vendorize.patch: Refreshed.
+    - use-venv-wheels.patch: Handle virtualenv created venvs.
+    - better-error-message.patch: Added.
+  * d/pip.dependencies: Added.  (Closes: #749692)
+  * d/python-pip-whl.install: Updated.
+  * d/README.debian: Added.
+  * Updates to the pip manpage. (Closes: #687938)
+    - Rewrote using reStructuredText.
+    - Fleshed out with more options.
+    - Removed pip.1
+    - Use pip-manpage.rst as the source for both pip and pip3 commands.
+
+ -- Barry Warsaw <barry@debian.org>  Tue, 03 Jun 2014 18:56:01 -0400
+
+python-pip (1.5.5-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * d/patches/de-vendorize.patch: Refreshed.
+  * d/patches/use-venv-wheels.patch:
+    - When inside a virtual environment, prepend to sys.path any wheels found
+      in <venv>/lib/python-wheels
+    - Adjust setup.py's test_requires since python-virtualenv is enough to
+      satisfy the requirement, but the tools aren't smart enough to know this.
+  * d/compat: Bump to version 8.
+  * d/control:
+    - Add python-pip-whl binary package.
+    - Add to Build-Depends: python{,3}-mock, python{,3}-test,
+      python{,3}-scripttest, python-virtualenv, python3-wheel
+    - Update other Build-Depends.
+    - wrap-and-sort
+  * d/rules:
+    - Build and install the pip universal wheel.
+    - Use --build-system=pybuild.
+    - Remove unnecessary files here instead of in d/*.pyremove.
+  * d/python-pip-whl.install: Added.
+  * d/python-pip.install: Removed.
+  * d/python-pip.pyremove: Removed.
+  * d/python3-pip.install: Removed.
+  * d/python3-pip.manpages: Updated.
+  * d/python3-pip.pyremove: Removed.
+
+ -- Barry Warsaw <barry@debian.org>  Thu, 15 May 2014 16:47:46 -0400
+
+python-pip (1.5.4-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * d/patches:
+    - system-ca-certificates.patch: Removed.  This is obsoleted by the
+      vendorizing (and on Debian, de-vendorizing) of the requests library.
+    - no-python-specific-scripts.patch: Removed.  Upstream renamed pip-X.Y
+      to pipX.Y but adopts our pipX name as well.  I don't think it hurts
+      to also have pipX.Y.
+    - de-vendorize.patch: Added, in order to use Debian packages instead
+      of vendorized packages.
+  * d/control:
+    - Bump Standards-Version to 3.9.5 with no other changes needed.
+    - Update Depends for the vendorized packages.
+  * d/python{,3}-pip.pyremove: Remove pip/_vendor directory from binary
+    packages.
+
+ -- Barry Warsaw <barry@debian.org>  Mon, 31 Mar 2014 14:44:40 -0400
+
+python-pip (1.4.1-2) unstable; urgency=low
+
+  * Team upload.
+  * d/control:
+    - Move ca-certificates from Recommends to Depends since
+      certificate checks are now turned on by default.  Without this,
+      default usage of pip will just error with an informative message
+      telling you to install ca-certificates anyway.  (Closes: #722295)
+    - wrap-and-sort
+  * d/python{,3}-pip.install: wrap-and-sort
+
+ -- Barry Warsaw <barry@debian.org>  Mon, 09 Sep 2013 18:26:28 -0400
+
+python-pip (1.4.1-1) unstable; urgency=low
+
+  * Team upload.
+  * New upstream release.
+    - d/control: Update Standards-Version to 3.9.4 with no additional
+      changes required.
+    - d/patches/no-python-specific-scripts.patch: Refreshed.
+    - d/patches/format_egg_string.patch: Refreshed.
+    - d/patches/system-ca-certificates.patch: Refreshed.
+
+ -- Barry Warsaw <barry@debian.org>  Mon, 19 Aug 2013 18:33:23 -0400
+
+python-pip (1.3.1-1) unstable; urgency=low
+
+  [ Stefano Rivera ]
+  * Team upload.
+  * New upstream release.
+    - pip now performs SSL certificate validation.
+      CVE-2013-1629 (Closes: #710163)
+  * Refresh patches.
+  * Drop test_urlparse_uses_fragment.patch - superseded upstream.
+  * Switch debian/watch to use https.
+  * Updated Homepage.
+  * Install the upstream changelog (Closes: #710134)
+  * debian/copyright:
+    - Update authors and years.
+    - The pip license is Expat.
+    - Reformat as valid machine-readable copyright format 1.0.
+    - Add pip/cacert.pem.
+  * debian/patches/system-ca-certificates.patch: Use the CA bundle provided by
+    ca-certificates.
+  * debian/patches/no-python-specific-scripts.patch: Drop pip-X.Y scripts, and
+    simply provide pip2 and pip3. (Closes: #679196, #680150)
+
+  [ Jakub Wilk ]
+  * Use canonical URIs for Vcs-* fields.
+
+  [ Dmitrijs Ledkovs ]
+  * Build depend on python3-all, fixes FTBFS against multiple supported
+    python3 versions (Closes: #692384).
+
+ -- Stefano Rivera <stefanor@debian.org>  Tue, 25 Jun 2013 23:43:45 +0200
+
+python-pip (1.1-3) unstable; urgency=low
+
+  * debian/patches
+    - add test_urlparse_uses_fragment.patch (Closes: #677801)
+
+ -- Carl Chenet <chaica@debian.org>  Sat, 23 Jun 2012 16:18:21 +0200
+
+python-pip (1.1-2) unstable; urgency=low
+
+  * debian/control
+    - Use X-Python-Version >= 2.6 (Closes: #676041)
+    - Put python-all (>= 2.6) in B-D and Depends field
+    - Put python-all-dev (>= 2.6) in python-pip pkg Depends field
+  * Add pip-2.6 manpage
+  * debian/python-pip.install
+    - add support for multiple 2.x libraries
+
+ -- Carl Chenet <chaica@debian.org>  Tue, 05 Jun 2012 23:03:13 +0200
+
+python-pip (1.1-1) unstable; urgency=low
+
+  * New upstream version (Closes: #632578,#633610,#653049)
+  * debian/control
+    - Add python3-pip binary package section
+    - Add python3 in B-D
+    - Add python3-pkg-resources and python3-setuptools in Depends
+    - Bump Standards-Version to 3.9.3
+    - Add X-Python3-Version field
+    - add python-dev, python3-dev and build-essential in Recommends
+      in order to be able to install C extensions (Closes: #633974)
+  * Add python-pip.manpages and python3-pip.manpages
+  * Update the pip.1 manpage
+  * Add the pip-2.7.1 and pip.3.2.1 manpages
+  * Add python-pip.links to link to pip exe name only for python2
+  * debian/patches
+    - Modify remove_hardcoded_python_version.patch to generate pip-X.Y binaries
+  * debian/rules
+    - Add with python3 to dh
+
+ -- Carl Chenet <chaica@debian.org>  Sun, 27 May 2012 04:14:03 +0200
+
+python-pip (1.0-1) unstable; urgency=low
+
+  * New upstream version
+  * debian/control
+    - Remove python-support from Build-Depends-Indep
+    - Bump python to 2.6.6-3
+    - Bump Standards-Version to 3.9.1
+  * debian/patches
+    - Replaced remove_hardcoded_python_version by
+      remove_hardcoded_python_version.patch
+    - Replaced format_egg_string by format_egg_string.patch
+  * debian/rules
+    - Added --with python2 to dh $@
+  * debian/copyright
+    - updated copyright dates and authors
+
+ -- Carl Chenet <chaica@ohmytux.com>  Wed, 13 Apr 2011 04:12:53 +0200
+
+python-pip (0.8.1-1) unstable; urgency=low
+
+  * New upstream version
+  * debian/patches/format_egg_string
+    - use the same egg string format than Debian python-setuptools
+      Closes: #562544
+  * debian/patches/remove_hardcoded_python_version
+    - remove pip-X.X exe and hardcoded Python version in entry_points.txt
+  * debian/control
+    - bump Standards-Version to 3.9.1. No changes needed.
+    - added python-setuptools to Build-Depends-Indep
+    - switched XS-Python-Version to >= 2.5
+  * debian/rules
+    - removing overrides
+
+ -- Carl Chenet <chaica@ohmytux.com>  Wed, 06 Oct 2010 01:15:42 +0200
+
+python-pip (0.7.2-1) unstable; urgency=low
+
+  * New upstream version
+  * Added debian/install
+  * debian/source/format
+    - bump to 3.0 (quilt)
+  * renamed python-pip.manpages to manpages
+  * debian/control
+    - bump Standards-Version to 3.8.4 (no changes needed)
+    - switched XS-Python-Version to all
+    - removed python-setuptools in Build-Depends
+  * debian/rules
+    - overriding dh_auto_install to install with install file
+  * debian/pip.1
+    - added uninstall and search sections
+
+ -- Carl Chenet <chaica@ohmytux.com>  Fri, 04 Jun 2010 02:02:44 +0200
+
+python-pip (0.6.1-1) unstable; urgency=low
+
+  [ Carl Chenet ]
+  * New upstream release. Closes: #546049
+  * Switched from python-central to python-support
+    Closes: #556852
+  * Using dh7 + rules.tiny
+  * debian/control
+    - Added Build-Depends-Indep field
+    - Switched Vcs-Bzr to Vcs-Svn
+    - Switched Vcs-Browser to DPMT SVN url.
+    - Removed python-all-dev from b-d. Not needed.
+    - Removed xsltproc and docbook-xsl from b-d-i. Not needed anymore.
+      We use a static debian/pip.1
+    - Maintainer is now the DPMT team
+    - Put Carl Chenet <chaica@ohmytux.com> in Uploaders
+    - Put Jeff Licquia <licquia@debian.org> in Uploaders
+    - python-setuptools is mandatory at runtime
+      Added it in Depends field: Closes: #536698, #546432
+    - Removing the first line of the long description
+    - bump Standards-Version to 3.8.3 (no changes needed)
+  * Removed debian/dirs
+  * Replacing pip.xml by pip.1
+  * debian/watch
+    - Removed useless comments
+  * debian/rules
+    - Added an override for the upstream changelog
+
+  [ Kumar Appaiah ]
+  * Integrate NMU changelog entry.
+
+  [ Sandro Tosi ]
+  * debian/control
+    - removed python-all-dev from b-d, not needed
+
+ -- Carl Chenet <chaica@ohmytux.com>  Tue, 15 Dec 2009 02:07:56 +0100
+
+python-pip (0.3.1-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Add Jakub Wilk's patch to fix FTBFS with Python 2.6 (Closes: #556852)
+
+ -- Kumar Appaiah <akumar@debian.org>  Tue, 08 Dec 2009 18:41:05 -0600
+
+python-pip (0.3.1-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Add Jakub Wilk's patch to fix FTBFS with Python 2.6 (Closes: #556852)
+
+ -- Kumar Appaiah <akumar@debian.org>  Tue, 08 Dec 2009 18:41:05 -0600
+
+python-pip (0.3.1-1) unstable; urgency=low
+
+  * Initial release.  Closes: #522135.
+
+ -- Jeff Licquia <licquia@debian.org>  Tue, 21 Apr 2009 21:10:13 -0400
